@@ -71,8 +71,8 @@ cronjob.log
 .idea/*
 log
 
-migrations/
-**/migrations/
+# migrations/
+# **/migrations/
 **/__pycache__/
 **/.env/
 project/.env
