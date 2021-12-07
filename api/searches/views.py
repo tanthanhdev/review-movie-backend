@@ -14,8 +14,8 @@ from collections import OrderedDict
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import *
-from api.jobs.models import Job
-from api.jobs.serializers import JobSerializer, JobUpdateSerializer
+from api.products.models import Job
+from api.products.serializers import JobSerializer, JobUpdateSerializer
 from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
 import json

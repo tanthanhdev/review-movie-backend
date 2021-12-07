@@ -51,9 +51,7 @@ INSTALLED_APPS = [
     's3direct',
     # 
     'api.users',
-    'api.members',
-    'api.employers',
-    'api.jobs',
+    'api.products',
     'api.searches',
 ]
 

@@ -58,33 +58,12 @@ class MyMessage(APIException):
         APIException.__init__(self, msg)
         self.status_code = attrs.get('status_code')
         self.message = msg
- 
-class RetriveEmployerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Employer
-        fields = "__all__"
         
 # Dashboard
-class JobUpdateSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(required=True)
-    about = serializers.CharField(required=False)
-    preparation_time = serializers.CharField(required=True)
-    cooking_time = serializers.CharField(required=True)
-    ingredient = serializers.CharField(required=True)
-    image = serializers.ImageField(required=False)
-    method = serializers.CharField(required=True)
-    comment = serializers.CharField(required=False)
-    category_id = serializers.CharField(required=False)
-    occasion_id = serializers.CharField(required=False)
-    tag_id = serializers.CharField(required=False)
-    web_link = serializers.CharField(required=False)
-    link = serializers.CharField(required=False)
+class ProductUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Job
-        fields = ('id', 'user' ,'title', 'slug', 'about', 'preparation_time', 'cooking_time', 'ingredient', 'image',
-                  'method', 'comment', 'web_link', 'link',
-                  'category_id', 'job_category_name', 'occasion_id', 'job_occasion_name', 
-                  'tag_id',  'job_tag_name')
+        model = Product
+        fields = "__all__"
         
     # Get current user login
     def _current_user(self):
@@ -93,33 +72,20 @@ class JobUpdateSerializer(serializers.ModelSerializer):
             return request.user
         return False
 
-    def _job_user(self):
+    def _product_user(self):
         try:
             current_user = self._current_user()
-            job = Job.objects.get(Q(title__iexact=self.validated_data['title']), Q(user=current_user))
-            return job
+            product = Product.objects.get(Q(title__iexact=self.validated_data['title']), Q(user=current_user))
+            return product
         except:
             return None
 
-    def job_exists(self, slug):
-        job = self._job_user()
-        if job:
-            if job.slug != slug:
+    def product_exists(self, slug):
+        product = self._product_user()
+        if product:
+            if product.slug != slug:
                 return False
         return True  
-    
-    def tag_exists(self):
-        tag_id = None
-        try:
-            tag_id = self.validated_data['tag_id']
-        except: pass
-        if tag_id:
-            current_user = self._current_user()
-            tag = Tag.objects.filter(Q(id=tag_id), (
-                Q(user=current_user) | Q(status=True) | Q(user__is_staff=True)))
-            if not tag:
-                return False
-        return True
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -132,13 +98,11 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('name', 'slug')
 
-class JobSerializer(serializers.ModelSerializer):
-    employer = RetriveEmployerSerializer()
-    country = CountrySerializer()
-    tag = TagSerializer(many=True)
+class ProductSerializer(serializers.ModelSerializer):
+    country = CountrySerializer(many=True)
     
     class Meta:
-        model = Job
+        model = Product
         fields = "__all__"
     
     def _current_user(self):
@@ -147,30 +111,20 @@ class JobSerializer(serializers.ModelSerializer):
             return request.user
         return False
     
-    def tag_exists(self):
-        if (self.validated_data['tag_id']):
-            current_user = self._current_user()
-            tag = Tag.objects.filter(Q(id=self.validated_data['tag_id']), (
-                Q(user=current_user) | Q(status=True) | Q(user__is_staff=True)))
-            if not tag:
-                return False
-            return True
-        return True
-    
-    def job_exists(self):
+    def product_exists(self):
         current_user = self._current_user()
-        job = Job.objects.filter(Q(title__iexact=self.validated_data['title']), Q(user=current_user))
-        if job:
+        product = Product.objects.filter(Q(title__iexact=self.validated_data['title']), Q(user=current_user))
+        if product:
             return False
         return True  
   
     def create(self, validated_data):
         try: 
             current_user = self._current_user()
-            job = Job.objects.create(**validated_data)
-            job.user = current_user
-            job.save()
-            return job
+            product = Product.objects.create(**validated_data)
+            product.user = current_user
+            product.save()
+            return product
         except:
             return serializers.ValidationError("Bad Request")
         return serializers.ValidationError("Server Error")

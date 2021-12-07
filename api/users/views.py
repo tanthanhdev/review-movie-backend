@@ -327,17 +327,11 @@ def registration_view(request):
             serializer.send_mail()
             data['message'] = 'Registered successfully! A mail sent to your mailbox for activation account.'
             # data['message'] = 'Registered successfully!'
-            group = ""
-            try:
-                group = request.data.get('group')
-            except:
-                pass
             data['results'] = {
                 'id': user.id,
                 'email': user.email,
                 'first_name': user.first_name,
                 'last_name': user.last_name,
-                'group': group,
             }
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    

@@ -34,8 +34,5 @@ urlpatterns = [
     path('auth/create-access-token/', create_access_token_view),
     path('auth/reset-password/', reset_password_view),
     # other module
-    path('', include('api.members.urls')), # Member
-    path('', include('api.employers.urls')), # Employer
-    path('', include('api.jobs.urls')), # Job
-    path('', include('api.searches.urls')), # searches
+    # path('', include('api.searches.urls')), # searches
 ]

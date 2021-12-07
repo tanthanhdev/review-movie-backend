@@ -16,7 +16,6 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 
 # models
-from api.employers.models import Employer
 # regex
 import re
 # rest fw jwt settings
@@ -527,13 +526,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
     # name = serializers.CharField(source='first_name', required=False, allow_blank=True)
     #more
     status = serializers.CharField(required=False, allow_blank=True)
-    #hide
-    group = serializers.CharField(required=True)
 
     class Meta:
         model = User
         fields = ['email', 'password', 'first_name', 'last_name', 'status',
-                    'group',
                   'inviteEmail', 'inviteBy']  # 'username', 'name',
         extra_kwargs = {
             'password': {'write_only': True},
@@ -626,7 +622,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def save(self):
         password = self.validated_data['password']
-        group = self.validated_data['group']
 
         # validate password
         if re.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$', password) == None:
@@ -661,12 +656,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
             first_name=self.validated_data['first_name'],
             last_name=self.validated_data['last_name'],
         )
-        if group == "employer":
-            Employer.objects.create(user=user).save()
-            user.status = self.validated_data['status']
-            user.is_staff = True
-        else:
-            user.is_staff = False
         # save user
         user.set_password(password)
         user.is_active = False # is True if confirmed account,
@@ -706,8 +695,6 @@ class RegistrationEmployerSerializer(serializers.ModelSerializer):
     company_name = serializers.CharField(required=True)
     company_location = serializers.CharField(required=True)
     status = serializers.CharField(required=False, allow_blank=True)
-    #hide
-    group = serializers.CharField(required=True)
 
     class Meta:
         model = User
@@ -805,7 +792,6 @@ class RegistrationEmployerSerializer(serializers.ModelSerializer):
 
     def save(self):
         password = self.validated_data['password']
-        group = self.validated_data['group']
 
         # validate password
         if re.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$', password) == None:
@@ -840,15 +826,6 @@ class RegistrationEmployerSerializer(serializers.ModelSerializer):
             first_name=self.validated_data['first_name'],
             last_name=self.validated_data['last_name'],
         )
-        if group == "employer":
-            Employer.objects.create(user=user).save()
-            user.phone_number = self.validated_data['phone_number']
-            user.employer.company_name = self.validated_data['company_name']
-            user.employer.company_location = self.validated_data['company_location']
-            user.status = self.validated_data['status']
-            user.is_staff = True
-        else:
-            user.is_staff = False
         # save user
         user.set_password(password)
         user.is_active = False # is True if confirmed account,
