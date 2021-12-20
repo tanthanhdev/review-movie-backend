@@ -23,7 +23,7 @@ $(() => {
             $("#validationUpdateDatabase").css("display", "none");
             console.log(data);
             $.ajax({
-            url: "http://localhost:8000/integration",
+            url: "https://api-reviewmovie-dtu.herokuapp.com/integration", //http://localhost:8000
             type: "POST",
             data: data,
             beforeSend: () => {
