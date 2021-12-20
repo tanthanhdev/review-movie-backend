@@ -30,6 +30,7 @@ def unique_slugify(instance, slug):
 
 # extend User system table
 class User(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(('username'), max_length=30, unique=True)
     first_name = models.CharField(('first name'), max_length=30)
     last_name = models.CharField(('last name'), max_length=150)
     email = models.EmailField(('email address'), unique=True)
@@ -59,3 +60,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+class History(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ('-pk',)
+        db_table = 'histories'

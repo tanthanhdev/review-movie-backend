@@ -12,11 +12,11 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 # Define class
-search_job_list = SearchJobViewSet.as_view({
+search_product_list = SearchProductViewSet.as_view({
     'get': 'list', # Get lists
 })
 
 urlpatterns = [
     # dashboard
-    path('searches/job/', search_job_list),
+    path('searches/product/', search_product_list),
 ]

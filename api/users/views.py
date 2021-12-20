@@ -391,3 +391,18 @@ def logout_view(request):
         except (AttributeError, ObjectDoesNotExist):
             return Response({'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)  
     return Response({'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)    
+
+#integration
+from api.users import database_integration
+from django.http import JsonResponse
+
+@api_view(['POST'])
+def database_integration_view(request):
+    if request.is_ajax and request.method == 'POST':
+        database_integration.update_database(request.POST.getlist('additionalTable'), request.POST.get('start_update'), request.POST.get('end_update'))
+        history = History.objects.first()
+        return JsonResponse({'latest_update': history.created_at}, status=200)
+    return JsonResponse({'data': False}, status=400)
+
+def vendor_view(request):
+    return render(request, 'vendor/index.html')

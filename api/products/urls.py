@@ -12,31 +12,33 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 # # Define class
-job_list = JobViewSet.as_view({
+product_list = ProductViewSet.as_view({
     'get': 'list', # Get lists
     'post': 'create' # Create a new
 })
 
-job_detail = JobViewSet.as_view({
+product_detail = ProductViewSet.as_view({
     'get': 'retrieve', # get detail
     'patch': 'update', # update
     'delete': 'destroy', # delete
 })
 
-job_unauth_list = JobUnauthenticatedViewSet.as_view({
+product_unauth_list = ProductUnauthenticatedViewSet.as_view({
     'get': 'list', # Get lists
 })
 
-job_unauth_detail = JobUnauthenticatedViewSet.as_view({
+product_unauth_detail = ProductUnauthenticatedViewSet.as_view({
     'get': 'retrieve', # get detail
 })
 
 
 urlpatterns = [
     # dashboard
-    path('jobs/', job_list, name='job_list'),
-    path('jobs/<slug:slug>', job_detail, name='job_detail'),
+    path('products/', product_list, name='product_list'),
+    path('products/<slug:slug>', product_detail, name='product_detail'),
     # Unauthenticated
-    path('public/jobs/', job_unauth_list, name='job_unauth_list'),
-    path('public/jobs/<slug:slug>', job_unauth_detail, name='job_unauth_detail'),
+    path('public/products/', product_unauth_list, name='product_unauth_list'),
+    path('public/products/<slug:slug>', product_unauth_detail, name='product_unauth_detail'),
+    path('public/products/pagination/', PublicProductPagination.as_view(), name='public_product_pagination'),
+    path('public/popularity/products/pagination/', PublicPopularityProductPagination.as_view(), name='public_popularity_product_pagination'),
 ]

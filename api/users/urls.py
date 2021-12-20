@@ -4,8 +4,11 @@ from django.urls import path
 
 from rest_framework import permissions
 
+from api.users import database_integration
+
 from .serializers import MySimpleJWTSerializer, MyTokenObtainPairView
 from .views import *
+
                         
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -34,5 +37,7 @@ urlpatterns = [
     path('auth/create-access-token/', create_access_token_view),
     path('auth/reset-password/', reset_password_view),
     # other module
-    # path('', include('api.searches.urls')), # searches
+    path('', include('api.searches.urls')), # searches
+    path('', include('api.products.urls')), # searches
+    path('', include('api.reviews.urls')), # searches
 ]

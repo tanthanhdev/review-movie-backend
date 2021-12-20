@@ -19,6 +19,7 @@ from django.contrib.auth.models import Group
 # models
 from .models import *
 # serializers
+from api.reviews.serializers import ReviewSerializer
 # regex
 import re
 # rest fw jwt settings
@@ -87,23 +88,51 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
                 return False
         return True  
 
-class CountrySerializer(serializers.ModelSerializer):
+# class CountrySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Country
+#         fields = "__all__"
+        
+# class CompanySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Company
+#         fields = "__all__"
+
+# class CastSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Cast
+#         fields = "__all__"
+
+# class CrewSerializer(serializers.ModelSerializer):
+#     products = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), many=True)
+     
+#     class Meta:
+#         model = Crew
+#         fields = "__all__"
+
+# class GenreSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Genre
+#         fields = "__all__"
+        
+# class LanguageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Language
+#         fields = "__all__"
+
+class VideoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Country
+        model = Video
         fields = "__all__"
         
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ('name', 'slug')
-
 class ProductSerializer(serializers.ModelSerializer):
-    country = CountrySerializer(many=True)
+    reviews_products = ReviewSerializer(many=True)
+    videos_products = VideoSerializer(many=True)
     
     class Meta:
         model = Product
         fields = "__all__"
+        depth = 1 
     
     def _current_user(self):
         request = self.context.get('request', None)

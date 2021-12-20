@@ -14,8 +14,8 @@ from collections import OrderedDict
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import *
-from api.products.models import Job
-from api.products.serializers import JobSerializer, JobUpdateSerializer
+from api.products.models import Product
+from api.products.serializers import ProductSerializer, ProductUpdateSerializer
 from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
 import json
@@ -25,9 +25,9 @@ from operator import or_, and_
 
 from api.users import status_http
 
-class SearchJobViewSet(viewsets.ModelViewSet):
-    queryset = Job.objects.all()
-    default_serializer_classes = JobSerializer
+class SearchProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    default_serializer_classes = ProductSerializer
     permission_classes = []
     pagination_class = None
     
@@ -40,19 +40,19 @@ class SearchJobViewSet(viewsets.ModelViewSet):
         slug = request.GET.get('slug')
         if query_string:
             query_string = query_string.strip()
-            queryset = Job.objects.filter(Q(title__icontains=query_string) | Q(company_name__icontains=query_string)
+            queryset = Product.objects.filter(Q(title__icontains=query_string) | Q(company_name__icontains=query_string)
                                           | Q(company_location__icontains=query_string) 
                                           | Q(description__icontains=query_string))
             if address:
                 address = address.strip()
                 if address != "Tất Cả Địa Điểm" and address != "":
-                    queryset = Job.objects.filter(Q(company_location=address))
+                    queryset = Product.objects.filter(Q(company_location=address))
         else:
-            queryset = Job.objects.all()
+            queryset = Product.objects.all()
         if slug:
             slug = slug.strip()
-            queryset = Job.objects.filter(Q(slug=slug))
+            queryset = Product.objects.filter(Q(slug=slug))
         if queryset.count() == 0:
-            return Response({'job': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = JobSerializer(queryset, many=True)
+            return Response({'product': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

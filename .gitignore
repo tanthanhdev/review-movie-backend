@@ -54,8 +54,8 @@ env
 db.sqlite3
 uploads/
 .env
-static/
-staticfiles/
+# static/
+# staticfiles/
 
 venv/
 *.swp

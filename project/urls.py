@@ -20,6 +20,7 @@ from django.views.generic.base import RedirectView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from api.users.views import database_integration_view, vendor_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +28,9 @@ urlpatterns = [
     url(r'^s3direct/', include('s3direct.urls')),
     # path('', RedirectView.as_view(url='management/login/')),
     # path('', include('frontend.urls')),
+    # other integration module
+    path('integration', database_integration_view, name='integration'),
+    path('vendor', vendor_view, name='vendor'),
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

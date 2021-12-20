@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'api.users',
     'api.products',
     'api.searches',
+    'api.reviews',
 ]
 
 MIDDLEWARE = [
@@ -170,7 +171,7 @@ REST_FRAMEWORK = {
     ),
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_PAGINATION_CLASS': 'api.users.custom_pagination.CustomPagination',
-    'PAGE_SIZE': 10,    
+    'PAGE_SIZE': 10,   
 }
 
 
