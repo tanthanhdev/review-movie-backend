@@ -151,6 +151,7 @@ class PublicProductPagination(ListAPIView):
     def get_queryset(self):
         queryset = Product.objects.all()
         genre = self.request.query_params.get('genre')
+        query = self.request.query_params.get('query')
         english_name = self.request.query_params.get('english_name')
         release_date = self.request.query_params.get('release_date')
         if genre:
@@ -160,6 +161,8 @@ class PublicProductPagination(ListAPIView):
         if release_date == "Up Comming":
             queryset = queryset.filter(Q(release_date__gt=datetime.datetime.now()) #greater than
                                        | Q(status="In Production"))
+        if query:
+            queryset = queryset.filter(title__icontains=query)
         return queryset
 
 class PublicPopularityProductPagination(ListAPIView):

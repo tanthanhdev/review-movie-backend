@@ -33,7 +33,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     # permission_classes = []
     pagination_class = None
     lookup_field = 'slug'
-    parser_classes = [MultiPartParser, FormParser]
+    # parser_classes = [MultiPartParser, FormParser]
     
     def get_serializer_class(self):
         return self.serializer_classes.get(self.action, self.default_serializer_classes)
@@ -55,19 +55,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
             return Response({'review': 'Review not found'}, status=status.HTTP_404_NOT_FOUND)
 
     def create(self, request, *args, **kwargs):
+        product = request.query_params.get('product', None)
         serializer = ReviewSerializer(data=request.data, context={
-            'request': request
+            'request': request, 'product': product,
         })
-        message = {}
         if serializer.is_valid():
-            if not serializer.review_exists():
-                message['review'] = 'Review with this title already exists'
-            if message:
-                return Response(message, status=status.HTTP_400_BAD_REQUEST)
-            if not serializer.tag_exists():
-                message['tag'] = 'Tag not found'
-            if message:
-                return Response(message, status=status.HTTP_204_NO_CONTENT)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                

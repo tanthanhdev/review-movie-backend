@@ -946,6 +946,8 @@ class LoginSerializer(serializers.ModelSerializer):
                         "last_name": user_obj.last_name,
                         "is_active": user_obj.is_active,
                         "is_staff": user_obj.is_staff,
+                        "avatar": user_obj.avatar,
+                        "address": user_obj.address,
                     },
                     # 'refresh': str(refresh),
                     'access_token': str(refresh.access_token),

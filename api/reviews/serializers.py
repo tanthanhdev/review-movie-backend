@@ -88,9 +88,13 @@ class ReviewUpdateSerializer(serializers.ModelSerializer):
         return True  
 
 class ReviewSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(required=True)
+    content = serializers.CharField(required=True)
+    
     class Meta:
         model = Review
-        fields = "__all__"
+        fields = ['id', 'title', 'content', 'user', 'product', 'author', 'created_at']
+        depth = 1 
     
     def _current_user(self):
         request = self.context.get('request', None)
@@ -98,18 +102,22 @@ class ReviewSerializer(serializers.ModelSerializer):
             return request.user
         return False
     
-    def review_exists(self):
-        current_user = self._current_user()
-        review = Review.objects.filter(Q(title__iexact=self.validated_data['title']), Q(user=current_user))
-        if review:
-            return False
-        return True  
-  
+    def _get_product(self):
+        product = self.context.get('product', None)
+        if product:
+            try:
+                productObj = Product.objects.get(slug=product)
+                return productObj
+            except: return False
+        return False
+    
     def create(self, validated_data):
         try: 
             current_user = self._current_user()
+            product = self._get_product()
             review = Review.objects.create(**validated_data)
             review.user = current_user
+            review.product_id = product.id
             review.save()
             return review
         except:
